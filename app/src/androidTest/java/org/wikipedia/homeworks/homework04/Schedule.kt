@@ -74,7 +74,6 @@ fun main() {
 
     val schedule = Schedule()
 
-
 //    // Так добавляется расписание без DSL
 //    schedule.addSchedule(Days.MONDAY, ScheduleEntity("Biology", LocalTime.of(10, 30), LocalTime.of(11, 10)))
 //    schedule.addSchedule(Days.MONDAY, ScheduleEntity("Chemistry", LocalTime.of(11, 15), LocalTime.of(11, 55)))
