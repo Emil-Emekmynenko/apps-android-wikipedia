@@ -1,5 +1,6 @@
 package org.wikipedia.homeworks.homework03
 
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
@@ -32,7 +33,7 @@ val tabLayoutButton = listOf(
 
 
 val imageViewCentered = listOf(
-    LinearLayout::class.java,
+    ImageView::class.java,
     "imageViewCentered"
 )
 
