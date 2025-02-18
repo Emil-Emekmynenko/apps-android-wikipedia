@@ -1,7 +1,8 @@
-package org.wikipedia.homeworks.homework06
+package com.emil.org.emil.kotlincourse
 
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
 
@@ -30,8 +31,12 @@ class CheckSideLengthInRangeMatcher (
     }
 
     override fun matchesSafely(item: Shape): Boolean {
-        return item.sideLength in min..min
+        return item.sideLength in min..max
     }
+}
+
+fun lengthRange(min: Float, max: Float): CheckSideLengthInRangeMatcher{
+    return CheckSideLengthInRangeMatcher(min, max)
 }
 
 // Проверка на чётное количество сторон.
@@ -45,6 +50,9 @@ class CheckingEvenNumberOfSides : TypeSafeMatcher<Shape>() {
         return item.numberSides % 2 == 0
     }
 }
+fun evenNumberOfSides(): CheckingEvenNumberOfSides{
+    return CheckingEvenNumberOfSides()
+}
 
 // Проверка цвета фигуры.
 
@@ -56,7 +64,9 @@ class CheckingColorOfShape(private val checkColor : Color): TypeSafeMatcher<Shap
     override fun matchesSafely(item: Shape): Boolean {
         return item.color == checkColor
     }
-
+}
+fun colorOfShape(checkColor: Color): CheckingColorOfShape{
+    return CheckingColorOfShape(checkColor)
 }
 
 // Проверка на наличие отрицательной длины стороны (недопустимо).
@@ -67,8 +77,11 @@ class NegativeSideLength: TypeSafeMatcher<Shape>() {
     }
 
     override fun matchesSafely(item: Shape): Boolean {
-        return item.sideLength <= 0.1
+        return item.sideLength >= 0
     }
+}
+fun negativeSideLength(): NegativeSideLength {
+    return NegativeSideLength()
 }
 
 // Проверка на наличие отрицательного количества сторон (недопустимо)
@@ -79,22 +92,33 @@ class NegativeNumberOfSides: TypeSafeMatcher<Shape>() {
     }
 
     override fun matchesSafely(item: Shape): Boolean {
-        return item.numberSides <= 0
+        return item.numberSides >= 0
     }
+}
+fun negativeNumberOfSide(): NegativeNumberOfSides {
+    return NegativeNumberOfSides()
 }
 
 // Проверка количества углов:
 
-class NumberOfAngles: TypeSafeMatcher<Shape>() {
+class NumberOfAngles(
+    private val checkAngles: Int
+): TypeSafeMatcher<Shape>() {
     override fun describeTo(description: Description) {
-        description.appendText("Количество углов")
+        description.appendText("Количество углов меньше трёх")
     }
 
     override fun matchesSafely(item: Shape): Boolean {
-        return if (item.numberSides >= 3) {
-            true
-        } else item.numberSides in 0..2
+        return if (item.numberSides in 0..2) {
+            checkAngles == 0
+        } else if (item.numberSides >= 3) {
+            item.numberSides == checkAngles
+        } else throw IllegalArgumentException("Число углов отрицательное")
     }
+}
+
+fun numberOfAngles(checkAngles: Int): NumberOfAngles {
+    return NumberOfAngles(checkAngles)
 }
 
 class MatcherBuilder() {
@@ -106,6 +130,16 @@ class MatcherBuilder() {
 }
 
 fun main() {
+//    val shape1 = Shape(100.0f, -6, Color.GREEN)
+//    assertThat(shape1, lengthRange(99.0f, 101.0f))
+//    assertThat(shape1, evenNumberOfSides())
+//    assertThat(shape1, colorOfShape(Color.GREEN))
+//    assertThat(shape1, negativeSideLength())
+//    assertThat(shape1, negativeNumberOfSide())
+//    assertThat(shape1, numberOfAngles(6))
+
+
+
     val shapes = listOf(
         Shape(10f, 3, Color.RED),
         Shape(5f, 4, Color.BLUE),
@@ -128,18 +162,18 @@ fun main() {
         Shape(40f, 18, Color.RED),
         Shape(50f, 20, Color.BLUE)
     )
-    val matchers = allOf(
-        CheckSideLengthInRangeMatcher(1.0f,20.2f),
-        CheckingColorOfShape(Color.BLUE),
-        CheckingEvenNumberOfSides(),
-        NegativeNumberOfSides(),
-        NegativeSideLength(),
-        NumberOfAngles()
-    )
+    val filterMatchers = shapes.filter { item ->
+        allOf(
+            lengthRange(1f, 101f),
+            evenNumberOfSides(),
+            colorOfShape(Color.RED),
+            negativeSideLength(),
+            negativeNumberOfSide(),
+            numberOfAngles(10)
+        ).matches(item)
+    }
 
-    val result = shapes.filter {matchers.matches(it)}
-
-    println(result)
+    println(filterMatchers)
 }
 
 
