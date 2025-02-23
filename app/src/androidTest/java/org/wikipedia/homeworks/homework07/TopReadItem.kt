@@ -17,7 +17,7 @@ class TopReadItem(matcher: Matcher<View>) : KRecyclerItem<TopReadItem>(matcher) 
         withId(R.id.view_list_card_header_menu)
     }
 
-    val footerButton = KImageView(matcher) {
+    val footerLink = KTextView(matcher) {
         withId(R.id.footerActionButton)
     }
 
