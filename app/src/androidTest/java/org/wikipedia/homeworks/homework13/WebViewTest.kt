@@ -63,7 +63,7 @@ class WebViewTest : TestCase() {
                     webView {
                         withElement(
                             Locator.XPATH,
-                            "//*[@id='cite_ref-OBrien_5-0']/a"
+                            "//span[@class='mw-reflink-text' and .//text()='5']"
                         ) {
                             Thread.sleep(3000)
                             scroll()
@@ -77,18 +77,18 @@ class WebViewTest : TestCase() {
                     title.containsText("Reference")
                 }
             }
-                    step("Проверить id Reference") {
-                        ReferenceScreenView {
-                            popupItem.childAt<ReferencePopupItem>(0) {
-                                referenceId.containsText("5")
-                            }
-                        }
+            step("Проверить id Reference") {
+                ReferenceScreenView {
+                    popupItem.childAt<ReferencePopupItem>(0) {
+                        referenceId.containsText("5")
+                    }
                 }
-                step("Нажать кнопку Назад") {
-                    device.uiDevice.pressBack()
-                }
-                step("Нажать на ссылку с CSS классом mw-redirect") {
-                    ArticleScreenView {
+            }
+            step("Нажать кнопку Назад") {
+                device.uiDevice.pressBack()
+            }
+            step("Нажать на ссылку с CSS классом mw-redirect") {
+                ArticleScreenView {
                     webView {
                         withElement(Locator.XPATH, "(//a[@class='mw-redirect'])[2]") {
                             click()

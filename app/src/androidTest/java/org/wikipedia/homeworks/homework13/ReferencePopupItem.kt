@@ -8,11 +8,11 @@ import org.wikipedia.R
 
 class ReferencePopupItem(matcher: Matcher<View>) : KViewPagerItem<ReferencePopupItem>(matcher) {
 
-    val text = KTextView{
+    val text = KTextView(matcher){
         withId(R.id.reference_text)
     }
 
-    val referenceId = KTextView {
+    val referenceId = KTextView(matcher) {
         withId(R.id.reference_id)
     }
 
